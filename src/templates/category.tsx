@@ -2,10 +2,12 @@ import React from 'react';
 import { Typography, Container, Stack, Box, Link } from '@mui/material';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
-import { Link as GatsbyLink, PageProps, graphql } from 'gatsby';
+import { Link as GatsbyLink, graphql } from 'gatsby';
 
 import Layout from '../components/Layout';
 import PostCard from '../components/PostCard/PostCard';
+
+import type { HeadFC, PageProps } from 'gatsby';
 
 interface CategoryPageContextProps {
   id: number;
@@ -253,3 +255,12 @@ export const pageQuery = graphql`
     }
   }
 `;
+
+export const Head: HeadFC<
+  Queries.CategoryPageQuery,
+  CategoryPageContextProps
+> = ({ pageContext }) => {
+  const { name } = pageContext;
+
+  return <title>Echorefer Gatsby | {name} Category</title>;
+};
