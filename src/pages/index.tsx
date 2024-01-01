@@ -34,7 +34,7 @@ const Homepage = ({ data }: PageProps<Queries.HomepageQuery>) => {
 
 export default Homepage;
 
-export const query = graphql`
+export const pageQuery = graphql`
   query Homepage {
     wpPage(uri: { eq: "/" }) {
       id
