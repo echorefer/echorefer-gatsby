@@ -51,8 +51,8 @@ const CategoryPage = ({
               }}
             >
               <Typography
-                variant="h1"
-                sx={{ fontSize: '3rem !important', fontWeight: 900 }}
+                component="h1"
+                sx={{ fontSize: '3rem', fontWeight: 900 }}
               >
                 {name}
               </Typography>
