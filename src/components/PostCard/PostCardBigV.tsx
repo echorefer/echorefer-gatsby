@@ -23,7 +23,7 @@ const PostCardBigV = ({
   avatarUrl,
   author,
 }: PostCardBigProps) => (
-  <Box sx={{ padding: 1 }}>
+  <Box sx={{ padding: 1, maxWidth: '376px' }}>
     <Box
       component="article"
       sx={{
@@ -33,6 +33,7 @@ const PostCardBigV = ({
         borderRadius: 4,
         overflow: 'hidden',
         boxShadow: 'rgba(1, 1, 1, 0.05) 1px 1px 5px',
+        height: '100%',
       }}
     >
       <Box
