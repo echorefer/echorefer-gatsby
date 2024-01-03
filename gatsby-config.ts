@@ -1,4 +1,10 @@
+import dotenv from 'dotenv';
+
 import type { GatsbyConfig } from 'gatsby';
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -10,7 +16,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-source-wordpress',
       options: {
-        url: 'http://localhost/graphql',
+        url: process.env.WORDPRESS_API_URL,
       },
     },
     {
