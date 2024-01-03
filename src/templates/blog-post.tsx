@@ -200,7 +200,6 @@ export const pageQuery = graphql`
                 width: 1600
                 aspectRatio: 2.46
                 layout: CONSTRAINED
-                placeholder: TRACED_SVG
                 transformOptions: { fit: COVER, cropFocus: CENTER }
               )
             }

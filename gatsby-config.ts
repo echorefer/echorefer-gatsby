@@ -20,6 +20,15 @@ const config: GatsbyConfig = {
       },
     },
     {
+      resolve: 'gatsby-source-strapi',
+      options: {
+        apiURL: process.env.STRAPI_API_URL,
+        accessToken: process.env.STRAPI_TOKEN,
+        collectionTypes: ['post', 'category'],
+        queryLimit: 1000,
+      },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `assets`,
