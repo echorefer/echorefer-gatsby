@@ -11,13 +11,15 @@ interface CategoryBlockProps {
 }
 
 const CategoryBlock = ({ category, postGridVariant }: CategoryBlockProps) => {
-  const { posts } = category.node;
+  const { posts } = category;
+  const uri = `/${category.slug}`;
 
+  if (!posts || posts.length === 0) return null;
   return (
     <section>
       <Container sx={{ pb: 8 }}>
-        <BlockTitle title={category.node.name} url={category.node.uri} />
-        <PostGrid posts={posts.nodes} variant={postGridVariant} />
+        <BlockTitle title={category.name} uri={uri} />
+        <PostGrid posts={posts} variant={postGridVariant} />
       </Container>
     </section>
   );

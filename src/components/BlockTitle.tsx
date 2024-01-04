@@ -4,10 +4,10 @@ import { Link as GatsbyLink } from 'gatsby';
 
 interface BlockTitleProps {
   title: string;
-  url?: string;
+  uri?: string;
 }
 
-const BlockTitle = ({ title, url }: BlockTitleProps) => {
+const BlockTitle = ({ title, uri }: BlockTitleProps) => {
   return (
     <Box
       sx={{
@@ -26,10 +26,10 @@ const BlockTitle = ({ title, url }: BlockTitleProps) => {
       }}
     >
       <Box>
-        {url ? (
+        {uri ? (
           <Link
             component={GatsbyLink}
-            to={url}
+            to={uri}
             sx={{
               marginTop: 'auto',
               fontSize: '1.5rem',
@@ -55,13 +55,13 @@ const BlockTitle = ({ title, url }: BlockTitleProps) => {
           </Typography>
         )}
       </Box>
-      {url && (
+      {uri && (
         <Box sx={{ pr: 4 }}>
           <Chip
             label="View More"
             clickable
             component={Link}
-            href={url}
+            href={uri}
             sx={{
               color: '#2d3748',
               fontSize: '0.75rem',

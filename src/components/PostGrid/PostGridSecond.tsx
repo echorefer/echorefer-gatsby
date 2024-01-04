@@ -4,6 +4,9 @@ import { Stack, Grid } from '@mui/material';
 import PostCard from '../PostCard/PostCard';
 
 const PostGridSecond = ({ posts }) => {
+  if (!posts || posts.length === 0) return null;
+  posts.slice(0, 6);
+
   return (
     <Grid container spacing={2} sx={{ alignItems: 'stretch' }}>
       <Grid item lg={8}>

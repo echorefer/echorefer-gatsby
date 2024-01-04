@@ -9,87 +9,32 @@ import FeaturedBlock from '../components/FeaturedBlock';
 import type { HeadFC, PageProps } from 'gatsby';
 
 const Homepage = ({ data }: PageProps<Queries.HomepageQuery>) => {
-  const categories = data.allWpCategory.edges;
-  const featuredPosts = data.allWpPost;
-  const strapiPosts = data.featuredPosts.nodes;
+  const featuredPosts = data.featuredPosts.nodes;
+  const categories = data.categories.nodes;
 
-  console.log('Homepage strapiPosts', strapiPosts);
   return (
     <Layout>
-      <FeaturedBlock posts={strapiPosts} />
+      <FeaturedBlock posts={featuredPosts} />
       <CallToAction
         heading1="Get Inspired to Achieve"
         heading2="Enhanced Outcomes."
         quote="“ While one person hesitates because he feels inferior, the other is busy making mistakes and becoming superior. ”"
         name="Henry C. Link"
       />
-      {/* {categories.map((category, i) => (
+      {categories.map((category, i) => (
         <CategoryBlock
-          key={category.node.name}
+          key={category.name}
           category={category}
           postGridVariant={i % 2 === 0 ? 'first' : 'second'}
         />
-      ))} */}
+      ))}
     </Layout>
   );
 };
 
 export const pageQuery = graphql`
   query Homepage {
-    allWpCategory(filter: { name: { ne: "Senza categoria" } }) {
-      edges {
-        node {
-          id
-          name
-          uri
-          posts {
-            nodes {
-              author {
-                node {
-                  firstName
-                  lastName
-                  avatar {
-                    url
-                  }
-                }
-              }
-              excerpt
-              title
-              date
-              featuredImage {
-                node {
-                  altText
-                  localFile {
-                    childImageSharp {
-                      cardImageCover: gatsbyImageData(
-                        width: 360
-                        aspectRatio: 0.76
-                        layout: CONSTRAINED
-                        transformOptions: { fit: COVER, cropFocus: CENTER }
-                      )
-                      cardImageBig: gatsbyImageData(
-                        width: 380
-                        aspectRatio: 1.3
-                        layout: CONSTRAINED
-                        transformOptions: { fit: COVER, cropFocus: CENTER }
-                      )
-                    }
-                  }
-                }
-              }
-              categories {
-                nodes {
-                  name
-                  uri
-                }
-              }
-              uri
-            }
-          }
-        }
-      }
-    }
-    featuredPosts: allStrapiPost(filter: { featured: { eq: true } }) {
+    featuredPosts: allStrapiPost(filter: { featured: { eq: true } }, limit: 9) {
       nodes {
         title
         author {
@@ -120,6 +65,48 @@ export const pageQuery = graphql`
         }
         createdAt
         slug
+      }
+    }
+    categories: allStrapiCategory {
+      nodes {
+        name
+        slug
+        posts {
+          author {
+            firstName
+            lastName
+          }
+          excerpt {
+            data {
+              excerpt
+            }
+          }
+          featuredImage {
+            localFile {
+              childImageSharp {
+                cardImageCover: gatsbyImageData(
+                  width: 360
+                  aspectRatio: 0.76
+                  layout: CONSTRAINED
+                  transformOptions: { fit: COVER, cropFocus: CENTER }
+                )
+                cardImageBig: gatsbyImageData(
+                  width: 380
+                  aspectRatio: 1.3
+                  layout: CONSTRAINED
+                  transformOptions: { fit: COVER, cropFocus: CENTER }
+                )
+              }
+            }
+          }
+          categories {
+            name
+            slug
+          }
+          title
+          slug
+          createdAt
+        }
       }
     }
   }

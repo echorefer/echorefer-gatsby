@@ -13,9 +13,6 @@ import type { PostCardProps } from './interface';
 const PostCard = ({ variant, post }: PostCardProps) => {
   const { featuredImage, author } = post;
 
-  console.log('PostCard featuredImage', featuredImage);
-  console.log('PostCard author.url', author.url);
-
   const postCardImage =
     variant === 'bigHorizontal' || variant === 'bigVertical'
       ? getImage(featuredImage.localFile.childImageSharp.cardImageBig)
@@ -92,7 +89,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
       <PostCardBigH
         uri={postUri}
         title={post.title}
-        excerpt={post.excerpt}
+        excerpt={post.excerpt?.data.excerpt}
         image={postCardImage}
         alt={imageCoverAlt}
         chipColor={chipColor}
@@ -107,7 +104,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
       <PostCardBigV
         uri={postUri}
         title={post.title}
-        excerpt={post.excerpt}
+        excerpt={post.excerpt?.data.excerpt}
         image={postCardImage}
         alt={imageCoverAlt}
         chipColor={chipColor}
