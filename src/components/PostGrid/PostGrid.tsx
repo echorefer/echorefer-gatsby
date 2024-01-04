@@ -7,6 +7,8 @@ import PostGridSecond from './PostGridSecond';
 import type { PostGridProps } from './interface';
 
 const PostGrid = ({ posts, variant }: PostGridProps) => {
+  console.log('PostGrid posts', posts);
+
   const components = {
     featured: <PostGridFeatured posts={posts} />,
     first: <PostGridFirst posts={posts} />,

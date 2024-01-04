@@ -5,11 +5,12 @@ import BlockTitle from './BlockTitle';
 import PostGrid from './PostGrid/PostGrid';
 
 const FeaturedBlock = ({ posts }) => {
+  console.log('FeaturedBlock posts', posts);
   return (
     <section>
       <Container sx={{ py: 8 }}>
         <BlockTitle title="Editor Suggestions" />
-        <PostGrid posts={posts.nodes} variant="featured" />
+        <PostGrid posts={posts} variant="featured" />
       </Container>
     </section>
   );

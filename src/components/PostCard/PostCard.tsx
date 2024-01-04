@@ -12,25 +12,32 @@ import type { PostCardProps } from './interface';
 //TODO: All PostCard components could use some style tiding
 const PostCard = ({ variant, post }: PostCardProps) => {
   const { featuredImage, author } = post;
+
+  console.log('PostCard featuredImage', featuredImage);
+  console.log('PostCard author.url', author.url);
+
   const postCardImage =
     variant === 'bigHorizontal' || variant === 'bigVertical'
-      ? getImage(featuredImage.node.localFile.childImageSharp.cardImageBig)
-      : getImage(featuredImage.node.localFile.childImageSharp.cardImageCover);
-  const imageCoverAlt = featuredImage.node.altText;
-  const authorName = `${author.node.firstName} ${author.node.lastName}`;
-  const formattedDate = new Date(post.date).toLocaleDateString('it-IT', {
+      ? getImage(featuredImage.localFile.childImageSharp.cardImageBig)
+      : getImage(featuredImage.localFile.childImageSharp.cardImageCover);
+
+  // TODO: Find how strapi and graphQl manage images alt and caption
+  // const imageCoverAlt = featuredImage.node.altText;
+  const imageCoverAlt = 'Placeholder';
+  const authorName = `${author.firstName} ${author.lastName}`;
+  const formattedDate = new Date(post.createdAt).toLocaleDateString('it-IT', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-  const category = post.categories.nodes[0].name;
-  const categoryUri = post.categories.nodes[0].uri;
+  const category = post.categories[0].name;
+  const categoryUri = post.categories[0].slug;
   const chipColor = categoryColors[category] || '#000000';
-
+  const postUri = `/${post.slug}`;
   const components = {
     cover: (
       <PostCardCover
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         image={postCardImage}
         alt={imageCoverAlt}
@@ -41,7 +48,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     ),
     small: (
       <PostCardSmall
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         image={postCardImage}
         alt={imageCoverAlt}
@@ -54,7 +61,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     ),
     smallNoChip: (
       <PostCardSmall
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         image={postCardImage}
         alt={imageCoverAlt}
@@ -68,7 +75,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     ),
     smallNoImage: (
       <PostCardSmall
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         image={postCardImage}
         alt={imageCoverAlt}
@@ -83,7 +90,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     ),
     bigHorizontal: (
       <PostCardBigH
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         excerpt={post.excerpt}
         image={postCardImage}
@@ -98,8 +105,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     ),
     bigVertical: (
       <PostCardBigV
-        post={post}
-        uri={post.uri}
+        uri={postUri}
         title={post.title}
         excerpt={post.excerpt}
         image={postCardImage}
