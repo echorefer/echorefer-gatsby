@@ -17,19 +17,23 @@ import type { PageProps } from 'gatsby';
 
 const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
   const { previous, next, post } = data;
-  const { title, date, content, author } = post;
-  const articleImage = getImage(
-    post?.featuredImage?.node?.localFile?.childImageSharp?.articleImage
-  );
-  const alText = post?.featuredImage?.node?.altText || ``;
-  const formattedDate = new Date(date).toLocaleDateString('it-IT', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-  const authorName = `${author.node.firstName} ${author.node.lastName}`;
-  const category = post?.categories?.nodes[0].name || '';
-  const uri = post?.categories?.nodes[0].uri || '';
+  const articleImage = post?.featuredImage?.localFile?.childImageSharp
+    ?.articleImage
+    ? getImage(post?.featuredImage?.localFile?.childImageSharp?.articleImage)
+    : null;
+  const articleImageAlt = 'Placeholder';
+  const formattedDate =
+    post?.publishedAt &&
+    new Date(post?.publishedAt).toLocaleDateString('it-IT', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  const authorName = `${post?.author?.firstName} ${post?.author?.lastName}`;
+  const category = post?.categories?.[0]?.name || '';
+  const uri = post?.categories?.[0]?.slug
+    ? `/${post?.categories?.[0]?.slug}`
+    : '';
 
   return (
     <Layout>
@@ -50,7 +54,7 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
             <header>
               {articleImage && (
                 <Box>
-                  <GatsbyImage image={articleImage} alt={alText} />
+                  <GatsbyImage image={articleImage} alt={articleImageAlt} />
                 </Box>
               )}
               <Box sx={{ mt: 4, px: 8 }}>
@@ -63,7 +67,7 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
                     color: '#2d3748',
                   }}
                 >
-                  {parse(title)}
+                  {post?.title}
                 </Typography>
                 <Stack spacing={1} direction="row">
                   <Box>
@@ -137,8 +141,11 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
               }}
             />
 
-            {content && (
-              <section itemProp="articleBody">{parse(content)}</section>
+            {post?.content?.data && (
+              <section itemProp="articleBody">
+                {post?.content?.data?.content &&
+                  parse(post?.content?.data?.content)}
+              </section>
             )}
           </article>
         </Box>
@@ -155,16 +162,20 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
           >
             <li>
               {previous && (
-                <Link to={previous.uri} rel="prev">
-                  ← {parse(previous.title)}
+                <Link
+                  to={`/${previous.slug}`}
+                  rel="prev"
+                  component={GatsbyLink}
+                >
+                  ← {previous.title}
                 </Link>
               )}
             </li>
 
             <li>
               {next && (
-                <Link to={next.uri} rel="next">
-                  {parse(next.title)} →
+                <Link to={`/${next.slug}`} rel="next" component={GatsbyLink}>
+                  {next.title} →
                 </Link>
               )}
             </li>
@@ -179,47 +190,48 @@ export default BlogPostTemplate;
 
 export const pageQuery = graphql`
   query BlogPost($id: String!, $previousPostId: String, $nextPostId: String) {
-    post: wpPost(id: { eq: $id }) {
+    post: strapiPost(id: { eq: $id }) {
+      id
       author {
-        node {
-          firstName
-          lastName
+        firstName
+        lastName
+      }
+      excerpt {
+        data {
+          excerpt
         }
       }
-      id
-      excerpt
-      content
+      content {
+        data {
+          content
+        }
+      }
       title
-      date(formatString: "MMMM DD, YYYY")
+      categories {
+        name
+        slug
+      }
+      publishedAt
       featuredImage {
-        node {
-          altText
-          localFile {
-            childImageSharp {
-              articleImage: gatsbyImageData(
-                width: 1600
-                aspectRatio: 2.46
-                layout: CONSTRAINED
-                transformOptions: { fit: COVER, cropFocus: CENTER }
-              )
-            }
+        localFile {
+          childImageSharp {
+            articleImage: gatsbyImageData(
+              width: 1600
+              aspectRatio: 2.46
+              layout: CONSTRAINED
+              transformOptions: { fit: COVER, cropFocus: CENTER }
+            )
           }
         }
       }
-      categories {
-        nodes {
-          name
-          uri
-        }
-      }
     }
-    previous: wpPost(id: { eq: $previousPostId }) {
-      uri
+    previous: strapiPost(id: { eq: $previousPostId }) {
       title
+      slug
     }
-    next: wpPost(id: { eq: $nextPostId }) {
-      uri
+    next: strapiPost(id: { eq: $nextPostId }) {
       title
+      slug
     }
   }
 `;

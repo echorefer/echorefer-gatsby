@@ -4,17 +4,17 @@ import type { GatsbyNode } from 'gatsby';
 
 const getPosts = async ({ graphql, reporter }) => {
   const graphqlResult = await graphql(`
-    query WpPosts {
-      allWpPost(sort: { date: DESC }) {
+    query allPosts {
+      allStrapiPost(sort: { publishedAt: DESC }) {
         edges {
-          previous {
+          next {
             id
           }
           post: node {
             id
-            uri
+            slug
           }
-          next {
+          previous {
             id
           }
         }
@@ -30,7 +30,7 @@ const getPosts = async ({ graphql, reporter }) => {
     return;
   }
 
-  return graphqlResult.data.allWpPost.edges;
+  return graphqlResult.data.allStrapiPost.edges;
 };
 
 const getCategories = async ({ graphql, reporter }) => {
@@ -62,7 +62,7 @@ const getCategories = async ({ graphql, reporter }) => {
 const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>
   await posts.map(({ previous, post, next }) =>
     gatsbyUtilities.actions.createPage({
-      path: post.uri,
+      path: `/${post.slug}`,
       component: path.resolve(`./src/templates/blog-post.tsx`),
       context: {
         id: post.id,
@@ -110,11 +110,4 @@ export const createPages: GatsbyNode['createPages'] = async (
   if (categories.length) {
     await createCategoryPages({ categories, gatsbyUtilities });
   }
-
-  const { createPage } = gatsbyUtilities.actions;
-
-  createPage({
-    path: `/`,
-    component: path.resolve(`src/pages/index.tsx`),
-  });
 };
