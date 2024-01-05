@@ -13,7 +13,7 @@ const PostGridFeatured = ({ posts }) => {
       {Array.from({ length: rows }).map((_, i) => (
         <Stack key={i} direction="row" spacing={2}>
           {postsToShow.slice(i * 3, i * 3 + 3).map((post) => (
-            <PostCard key={post.id} variant="cover" post={post} />
+            <PostCard key={post.slug} variant="cover" post={post} />
           ))}
         </Stack>
       ))}

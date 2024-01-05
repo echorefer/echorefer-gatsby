@@ -35,14 +35,16 @@ const getPosts = async ({ graphql, reporter }) => {
 
 const getCategories = async ({ graphql, reporter }) => {
   const graphqlResult = await graphql(`
-    query WpCategories {
-      allWpCategory(filter: { name: { ne: "Senza categoria" } }) {
+    query allCategories {
+      categories: allStrapiCategory {
         nodes {
           id
-          uri
-          count
-          name
+          slug
           description
+          name
+          posts {
+            id
+          }
         }
       }
     }
@@ -56,7 +58,7 @@ const getCategories = async ({ graphql, reporter }) => {
     return;
   }
 
-  return graphqlResult.data.allWpCategory.nodes;
+  return graphqlResult.data.categories.nodes;
 };
 
 const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>
@@ -74,13 +76,15 @@ const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>
 
 const createCategoryPages = ({ categories, gatsbyUtilities }) =>
   categories.map((category) => {
-    const { count, uri, id, name, description } = category;
-    const postsPerPage = 6;
+    const { slug, id, name, description, posts } = category;
+    const count = posts.length;
+    const postsPerPage = 3;
     const pageCount = count ? Math.ceil(count / postsPerPage) : 0;
+    const uri = `/${slug}`;
 
     Array.from({ length: pageCount }).forEach(async (_, i) => {
       await gatsbyUtilities.actions.createPage({
-        path: i === 0 ? uri : `${uri}page/${i + 1}`,
+        path: i === 0 ? uri : `${uri}/page/${i + 1}`,
         component: path.resolve(`./src/templates/category.tsx`),
         context: {
           id,

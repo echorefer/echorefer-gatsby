@@ -25,7 +25,7 @@ const CategoryPage = ({
   data,
   pageContext,
 }: PageProps<Queries.CategoryPageQuery, CategoryPageContextProps>) => {
-  const { nodes } = data.allWpPost;
+  const { nodes } = data.posts;
   const { name, description, currentPage, pageCount, uri, count } = pageContext;
   const isFirst = currentPage === 1;
   const isLast = currentPage === pageCount;
@@ -33,9 +33,9 @@ const CategoryPage = ({
   const prevLink = !isFirst
     ? currentPage === 2
       ? uri
-      : `${uri}page/${currentPage - 1}`
+      : `${uri}/page/${currentPage - 1}`
     : '';
-  const nextLink = !isLast ? `${uri}page/${currentPage + 1}` : '';
+  const nextLink = !isLast ? `${uri}/page/${currentPage + 1}` : '';
 
   return (
     <Layout>
@@ -208,49 +208,44 @@ export default CategoryPage;
 
 export const pageQuery = graphql`
   query CategoryPage($id: String!, $limit: Int, $skip: Int) {
-    allWpPost(
-      filter: { categories: { nodes: { elemMatch: { id: { eq: $id } } } } }
+    posts: allStrapiPost(
+      filter: { categories: { elemMatch: { id: { eq: $id } } } }
       limit: $limit
       skip: $skip
     ) {
       nodes {
-        author {
-          node {
-            firstName
-            lastName
+        title
+        excerpt {
+          data {
+            excerpt
           }
         }
-        excerpt
-        title
-        date
         featuredImage {
-          node {
-            altText
-            localFile {
-              childImageSharp {
-                cardImageCover: gatsbyImageData(
-                  width: 360
-                  aspectRatio: 0.76
-                  layout: CONSTRAINED
-                  transformOptions: { fit: COVER, cropFocus: CENTER }
-                )
-                cardImageBig: gatsbyImageData(
-                  width: 380
-                  aspectRatio: 1.3
-                  layout: CONSTRAINED
-                  transformOptions: { fit: COVER, cropFocus: CENTER }
-                )
-              }
+          localFile {
+            childImageSharp {
+              cardImageCover: gatsbyImageData(
+                width: 360
+                aspectRatio: 0.76
+                layout: CONSTRAINED
+                transformOptions: { fit: COVER, cropFocus: CENTER }
+              )
+              cardImageBig: gatsbyImageData(
+                width: 380
+                aspectRatio: 1.3
+                layout: CONSTRAINED
+                transformOptions: { fit: COVER, cropFocus: CENTER }
+              )
             }
           }
         }
-        categories {
-          nodes {
-            name
-            uri
-          }
+        author {
+          firstName
+          lastName
         }
-        uri
+        categories {
+          name
+          slug
+        }
       }
     }
   }
