@@ -9,8 +9,8 @@ import FeaturedBlock from '../components/FeaturedBlock';
 import type { HeadFC, PageProps } from 'gatsby';
 
 const Homepage = ({ data }: PageProps<Queries.HomepageQuery>) => {
-  const categories = data.allWpCategory.edges;
-  const featuredPosts = data.allWpPost;
+  const featuredPosts = data.featuredPosts.nodes;
+  const categories = data.categories.nodes;
 
   return (
     <Layout>
@@ -23,7 +23,7 @@ const Homepage = ({ data }: PageProps<Queries.HomepageQuery>) => {
       />
       {categories.map((category, i) => (
         <CategoryBlock
-          key={category.node.name}
+          key={category.name}
           category={category}
           postGridVariant={i % 2 === 0 ? 'first' : 'second'}
         />
@@ -32,32 +32,56 @@ const Homepage = ({ data }: PageProps<Queries.HomepageQuery>) => {
   );
 };
 
-export default Homepage;
-
 export const pageQuery = graphql`
   query Homepage {
-    wpPage(uri: { eq: "/" }) {
-      id
-      title
-      content
-    }
-    allWpPost(filter: { standard: { featured: { eq: true } } }) {
+    featuredPosts: allStrapiPost(filter: { featured: { eq: true } }, limit: 9) {
       nodes {
+        title
         author {
-          node {
-            firstName
-            lastName
-            avatar {
-              url
+          firstName
+          lastName
+        }
+        featuredImage {
+          localFile {
+            childImageSharp {
+              cardImageCover: gatsbyImageData(
+                width: 360
+                aspectRatio: 0.76
+                layout: CONSTRAINED
+                transformOptions: { fit: COVER, cropFocus: CENTER }
+              )
+              cardImageBig: gatsbyImageData(
+                width: 380
+                aspectRatio: 1.3
+                layout: CONSTRAINED
+                transformOptions: { fit: COVER, cropFocus: CENTER }
+              )
             }
           }
         }
-        excerpt
-        title
-        date
-        featuredImage {
-          node {
-            altText
+        categories {
+          name
+          slug
+        }
+        createdAt
+        slug
+      }
+    }
+    categories: allStrapiCategory {
+      nodes {
+        name
+        slug
+        posts {
+          author {
+            firstName
+            lastName
+          }
+          excerpt {
+            data {
+              excerpt
+            }
+          }
+          featuredImage {
             localFile {
               childImageSharp {
                 cardImageCover: gatsbyImageData(
@@ -75,66 +99,13 @@ export const pageQuery = graphql`
               }
             }
           }
-        }
-        categories {
-          nodes {
+          categories {
             name
-            uri
+            slug
           }
-        }
-        uri
-      }
-    }
-    allWpCategory(filter: { name: { ne: "Senza categoria" } }) {
-      edges {
-        node {
-          id
-          name
-          uri
-          posts {
-            nodes {
-              author {
-                node {
-                  firstName
-                  lastName
-                  avatar {
-                    url
-                  }
-                }
-              }
-              excerpt
-              title
-              date
-              featuredImage {
-                node {
-                  altText
-                  localFile {
-                    childImageSharp {
-                      cardImageCover: gatsbyImageData(
-                        width: 360
-                        aspectRatio: 0.76
-                        layout: CONSTRAINED
-                        transformOptions: { fit: COVER, cropFocus: CENTER }
-                      )
-                      cardImageBig: gatsbyImageData(
-                        width: 380
-                        aspectRatio: 1.3
-                        layout: CONSTRAINED
-                        transformOptions: { fit: COVER, cropFocus: CENTER }
-                      )
-                    }
-                  }
-                }
-              }
-              categories {
-                nodes {
-                  name
-                  uri
-                }
-              }
-              uri
-            }
-          }
+          title
+          slug
+          createdAt
         }
       }
     }
@@ -142,3 +113,5 @@ export const pageQuery = graphql`
 `;
 
 export const Head: HeadFC = () => <title>Echorefer Gatsby | Home Page</title>;
+
+export default Homepage;

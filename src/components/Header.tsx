@@ -19,7 +19,8 @@ import NavItem from './NavItem';
 import Search from './Search';
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
+  py: 0,
+  px: 2,
   height: '100%',
   position: 'absolute',
   pointerEvents: 'none',
@@ -31,17 +32,9 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
+    padding: 1,
+    paddingLeft: `calc(1em + ${4})`,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
   },
 }));
 
@@ -56,23 +49,19 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const {
-    wpMenu: {
-      menuItems: { nodes },
-    },
-  } = useStaticQuery(graphql`
-    query {
-      wpMenu(name: { eq: "Main Menu" }) {
-        name
-        menuItems {
-          nodes {
-            label
-            url
-          }
+  const { menu } = useStaticQuery<Queries.HeaderMenuQuery>(graphql`
+    query HeaderMenu {
+      menu: strapiMenu(name: { eq: "Header Menu" }) {
+        id
+        menu_items {
+          label
+          url
         }
       }
     }
   `);
+
+  const { menu_items } = menu;
 
   return (
     <AppBar position="static">
@@ -95,7 +84,7 @@ const Header = () => {
               justifyContent: 'center',
             }}
           >
-            {nodes.map((item) => (
+            {menu_items.map((item) => (
               <NavItem
                 item={item}
                 LinkComponent={GatsbyLink}
@@ -144,7 +133,7 @@ const Header = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {nodes.map((item) => (
+              {menu_items.map((item) => (
                 <Link component={GatsbyLink} to={item.url} key={item.label}>
                   {item.label}
                 </Link>

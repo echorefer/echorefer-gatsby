@@ -6,24 +6,19 @@ import { useStaticQuery, graphql, Link as GatsbyLink } from 'gatsby';
 import NavItem from './NavItem';
 
 const Footer = () => {
-  const data: Queries.FooterQuery = useStaticQuery(graphql`
-    query Footer {
-      wpMenu(name: { eq: "Main Menu" }) {
-        menuItems {
-          nodes {
-            label
-            url
-          }
+  const { menu } = useStaticQuery<Queries.FooterMenuQuery>(graphql`
+    query FooterMenu {
+      menu: strapiMenu(name: { eq: "Header Menu" }) {
+        id
+        menu_items {
+          label
+          url
         }
       }
     }
   `);
 
-  const {
-    wpMenu: {
-      menuItems: { nodes },
-    },
-  } = data;
+  const { menu_items } = menu;
 
   return (
     <Container maxWidth="lg">
@@ -39,7 +34,7 @@ const Footer = () => {
               justifyContent: 'center',
             }}
           >
-            {nodes.map((item) => (
+            {menu_items.map((item) => (
               <NavItem
                 item={item}
                 LinkComponent={GatsbyLink}

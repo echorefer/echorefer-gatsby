@@ -9,7 +9,7 @@ const FeaturedBlock = ({ posts }) => {
     <section>
       <Container sx={{ py: 8 }}>
         <BlockTitle title="Editor Suggestions" />
-        <PostGrid posts={posts.nodes} variant="featured" />
+        <PostGrid posts={posts} variant="featured" />
       </Container>
     </section>
   );
