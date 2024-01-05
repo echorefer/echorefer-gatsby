@@ -56,23 +56,19 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const {
-    wpMenu: {
-      menuItems: { nodes },
-    },
-  } = useStaticQuery(graphql`
-    query {
-      wpMenu(name: { eq: "Main Menu" }) {
-        name
-        menuItems {
-          nodes {
-            label
-            url
-          }
+  const { menu } = useStaticQuery<Queries.HeaderMenuQuery>(graphql`
+    query HeaderMenu {
+      menu: strapiMenu(name: { eq: "Header Menu" }) {
+        id
+        menu_items {
+          label
+          url
         }
       }
     }
   `);
+
+  const { menu_items } = menu;
 
   return (
     <AppBar position="static">
@@ -95,7 +91,7 @@ const Header = () => {
               justifyContent: 'center',
             }}
           >
-            {nodes.map((item) => (
+            {menu_items.map((item) => (
               <NavItem
                 item={item}
                 LinkComponent={GatsbyLink}
@@ -144,7 +140,7 @@ const Header = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {nodes.map((item) => (
+              {menu_items.map((item) => (
                 <Link component={GatsbyLink} to={item.url} key={item.label}>
                   {item.label}
                 </Link>
