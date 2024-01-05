@@ -2,9 +2,7 @@ import dotenv from 'dotenv';
 
 import type { GatsbyConfig } from 'gatsby';
 
-dotenv.config({
-  path: `.env.${process.env.NODE_ENV}`,
-});
+dotenv.config();
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -13,21 +11,6 @@ const config: GatsbyConfig = {
   },
   graphqlTypegen: true,
   plugins: [
-    {
-      resolve: 'gatsby-source-wordpress',
-      options: {
-        url: process.env.WORDPRESS_API_URL,
-      },
-    },
-    {
-      resolve: 'gatsby-source-strapi',
-      options: {
-        apiURL: process.env.STRAPI_API_URL,
-        accessToken: process.env.STRAPI_TOKEN,
-        collectionTypes: ['post', 'category', 'menu'],
-        queryLimit: 1000,
-      },
-    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -39,14 +22,13 @@ const config: GatsbyConfig = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     `gatsby-plugin-image`,
-
     {
-      resolve: `gatsby-plugin-manifest`,
+      resolve: 'gatsby-source-strapi',
       options: {
-        name: `Echorefer Gatsby Template`,
-        short_name: `echorefer gatsby template`,
-        start_url: `/`,
-        icon: `src/assets/images/gatsby-icon.png`,
+        apiURL: process.env.STRAPI_API_URL,
+        accessToken: process.env.STRAPI_TOKEN,
+        collectionTypes: ['post', 'category', 'menu'],
+        queryLimit: 1000,
       },
     },
   ],
