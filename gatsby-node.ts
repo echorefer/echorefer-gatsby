@@ -74,7 +74,7 @@ const createCategoryPages = ({ categories, gatsbyUtilities }) =>
   categories.map((category) => {
     const { slug, id, name, description, posts } = category;
     const count = posts.length;
-    const postsPerPage = 3;
+    const postsPerPage = 6;
     const pageCount = count ? Math.ceil(count / postsPerPage) : 0;
     const uri = `/${slug}`;
 

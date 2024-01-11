@@ -91,7 +91,10 @@ const Header = () => {
             }}
           >
             <Link component={GatsbyLink} to="/">
-              <StaticImage src="../assets/images/logo.png" alt="logo" />
+              <StaticImage
+                src="../../assets/images/logo-light.png"
+                alt="logo"
+              />
             </Link>
           </Box>
 
