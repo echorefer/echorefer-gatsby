@@ -9,14 +9,18 @@ import {
 } from '@mui/material';
 import { Link as GatsbyLink, graphql } from 'gatsby';
 import { GatsbyImage, getImage } from 'gatsby-plugin-image';
-import parse from 'html-react-parser';
+import Markdown from 'react-markdown';
 
 import Layout from '../components/Layout';
+import components from '../utils/markdownComponents';
 
 import type { PageProps } from 'gatsby';
+import RelatedBlock from '../components/RelatedBlock';
 
+// TODO: Need to figure out how to extract images from markdown using gatsby image system.
+// (Possible bug in gatsby-source-strapi, media field not showing under markdown)
 const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
-  const { previous, next, post } = data;
+  const { post, related } = data;
   const articleImage = post?.featuredImage?.localFile?.childImageSharp
     ?.articleImage
     ? getImage(post?.featuredImage?.localFile?.childImageSharp?.articleImage)
@@ -42,6 +46,7 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
           sx={{
             backgroundColor: 'white',
             borderRadius: 4,
+            mb: 4,
             overflow: 'hidden',
             boxShadow: '1px 1px 5px 0 rgba(1,1,1,.05)',
           }}
@@ -142,46 +147,19 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
             />
 
             {post?.content?.data && (
-              <section itemProp="articleBody">
-                {post?.content?.data?.content &&
-                  parse(post?.content?.data?.content)}
-              </section>
+              <Box sx={{ mx: 8 }}>
+                <section itemProp="articleBody">
+                  <Markdown components={components}>
+                    {post?.content?.data?.content}
+                  </Markdown>
+                </section>
+              </Box>
             )}
           </article>
         </Box>
-
-        <nav className="blog-post-nav">
-          <ul
-            style={{
-              display: `flex`,
-              flexWrap: `wrap`,
-              justifyContent: `space-between`,
-              listStyle: `none`,
-              padding: 0,
-            }}
-          >
-            <li>
-              {previous && (
-                <Link
-                  to={`/${previous.slug}`}
-                  rel="prev"
-                  component={GatsbyLink}
-                >
-                  ← {previous.title}
-                </Link>
-              )}
-            </li>
-
-            <li>
-              {next && (
-                <Link to={`/${next.slug}`} rel="next" component={GatsbyLink}>
-                  {next.title} →
-                </Link>
-              )}
-            </li>
-          </ul>
-        </nav>
       </Container>
+
+      <RelatedBlock posts={related.nodes} postGridVariant="related" />
     </Layout>
   );
 };
@@ -189,7 +167,7 @@ const BlogPostTemplate = ({ data }: PageProps<Queries.BlogPostQuery>) => {
 export default BlogPostTemplate;
 
 export const pageQuery = graphql`
-  query BlogPost($id: String!, $previousPostId: String, $nextPostId: String) {
+  query BlogPost($id: String!, $categoryId: String) {
     post: strapiPost(id: { eq: $id }) {
       id
       author {
@@ -225,13 +203,33 @@ export const pageQuery = graphql`
         }
       }
     }
-    previous: strapiPost(id: { eq: $previousPostId }) {
-      title
-      slug
-    }
-    next: strapiPost(id: { eq: $nextPostId }) {
-      title
-      slug
+    related: allStrapiPost(
+      filter: { categories: { elemMatch: { id: { eq: $categoryId } } } }
+    ) {
+      nodes {
+        title
+        slug
+        author {
+          firstName
+          lastName
+        }
+        featuredImage {
+          localFile {
+            childImageSharp {
+              cardImageCover: gatsbyImageData(
+                width: 360
+                aspectRatio: 0.76
+                layout: CONSTRAINED
+                transformOptions: { fit: COVER, cropFocus: CENTER }
+              )
+            }
+          }
+        }
+        categories {
+          name
+          slug
+        }
+      }
     }
   }
 `;

@@ -17,7 +17,6 @@ const BlockTitle = ({ title, uri }: BlockTitleProps) => {
         borderRadius: 2,
         pl: 4,
         py: 2,
-        mx: 1,
         mb: 2,
         background: 'white',
         display: 'flex',
