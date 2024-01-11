@@ -3,7 +3,7 @@ import { Stack, Box, Container, Divider, Typography } from '@mui/material';
 import { StaticImage } from 'gatsby-plugin-image';
 import { useStaticQuery, graphql, Link as GatsbyLink } from 'gatsby';
 
-import NavItem from './NavItem';
+import NavItem from './Header/NavItem';
 
 const Footer = () => {
   const { menu } = useStaticQuery<Queries.FooterMenuQuery>(graphql`
