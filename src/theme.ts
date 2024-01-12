@@ -44,6 +44,8 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           height: '120px',
+          backgroundColor: 'white',
+          boxShadow: 'none',
         },
       },
     },
@@ -59,7 +61,7 @@ let theme = createTheme({
         root: {
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           height: '100%',
         },
       },

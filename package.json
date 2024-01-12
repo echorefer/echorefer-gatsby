@@ -26,9 +26,9 @@
     "gatsby-source-filesystem": "5.11.0",
     "gatsby-source-strapi": "3.3.3",
     "gatsby-transformer-sharp": "5.13.0",
-    "html-react-parser": "5.0.11",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-markdown": "8.0.7"
   },
   "devDependencies": {
     "@types/node": "20.10.6",
@@ -36,5 +36,10 @@
     "@types/react-dom": "18.2.18",
     "dotenv": "16.3.1",
     "typescript": "5.3.3"
+  },
+  "overrides": {
+    "gatsby": {
+      "gatsby-graphiql-explorer": "3.11"
+    }
   }
 }

@@ -7,36 +7,14 @@ import {
   IconButton,
   Menu,
   Link,
-  InputBase,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import styled from '@emotion/styled';
 import { useStaticQuery, graphql, Link as GatsbyLink } from 'gatsby';
 import { StaticImage } from 'gatsby-plugin-image';
 
 import NavItem from './NavItem';
-import Search from './Search';
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  py: 0,
-  px: 2,
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: 1,
-    paddingLeft: `calc(1em + ${4})`,
-    width: '100%',
-  },
-}));
+import { Search, SearchIconWrapper, StyledInputBase } from './Search';
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -69,19 +47,32 @@ const Header = () => {
         <Toolbar disableGutters>
           <Box
             sx={{
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', md: 'flex', flexGrow: 1, flexBasis: 0 },
             }}
           >
             <Link component={GatsbyLink} to="/">
-              <StaticImage src="../assets/images/logo.png" alt="logo" />
+              <StaticImage
+                src="../../assets/images/logo-light.png"
+                alt="logo"
+              />
             </Link>
           </Box>
 
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+
           <Box
             sx={{
+              flexBasis: 0,
               flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-              justifyContent: 'center',
+              display: { xs: 'none', md: 'flex', justifyContent: 'end' },
             }}
           >
             {menu_items.map((item) => (
@@ -100,7 +91,10 @@ const Header = () => {
             }}
           >
             <Link component={GatsbyLink} to="/">
-              <StaticImage src="../assets/images/logo.png" alt="logo" />
+              <StaticImage
+                src="../../assets/images/logo-light.png"
+                alt="logo"
+              />
             </Link>
           </Box>
 
@@ -140,19 +134,10 @@ const Header = () => {
               ))}
             </Menu>
           </Box>
-
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
+
 export default Header;

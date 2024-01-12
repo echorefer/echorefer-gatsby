@@ -7,15 +7,12 @@ const getPosts = async ({ graphql, reporter }) => {
     query allPosts {
       allStrapiPost(sort: { publishedAt: DESC }) {
         edges {
-          next {
-            id
-          }
           post: node {
             id
             slug
-          }
-          previous {
-            id
+            categories {
+              id
+            }
           }
         }
       }
@@ -62,14 +59,13 @@ const getCategories = async ({ graphql, reporter }) => {
 };
 
 const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>
-  await posts.map(({ previous, post, next }) =>
+  await posts.map(({ post }) =>
     gatsbyUtilities.actions.createPage({
       path: `/${post.slug}`,
       component: path.resolve(`./src/templates/blog-post.tsx`),
       context: {
         id: post.id,
-        previousPostId: previous ? previous.id : null,
-        nextPostId: next ? next.id : null,
+        categoryId: post.categories[0].id,
       },
     })
   );
@@ -78,7 +74,7 @@ const createCategoryPages = ({ categories, gatsbyUtilities }) =>
   categories.map((category) => {
     const { slug, id, name, description, posts } = category;
     const count = posts.length;
-    const postsPerPage = 3;
+    const postsPerPage = 6;
     const pageCount = count ? Math.ceil(count / postsPerPage) : 0;
     const uri = `/${slug}`;
 

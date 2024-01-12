@@ -215,6 +215,7 @@ export const pageQuery = graphql`
     ) {
       nodes {
         title
+        slug
         excerpt {
           data {
             excerpt
