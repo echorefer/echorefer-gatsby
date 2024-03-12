@@ -28,7 +28,7 @@ const PostCard = ({ variant, post }: PostCardProps) => {
     day: 'numeric',
   });
   const category = post.categories[0].name;
-  const categoryUri = post.categories[0].slug;
+  const categoryUri = `/${post.categories[0].slug}`;
   const chipColor = categoryColors[category] || '#000000';
   const postUri = `/${post.slug}`;
   const components = {
