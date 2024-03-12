@@ -26,6 +26,9 @@ const CategoryPage = ({
   pageContext,
 }: PageProps<Queries.CategoryPageQuery, CategoryPageContextProps>) => {
   const { nodes } = data.posts;
+
+  console.log('CategoryPage -> nodes', nodes);
+
   const { name, description, currentPage, pageCount, uri, count } = pageContext;
   const isFirst = currentPage === 1;
   const isLast = currentPage === pageCount;
@@ -247,6 +250,7 @@ export const pageQuery = graphql`
           name
           slug
         }
+        createdAt
       }
     }
   }
